@@ -1,0 +1,72 @@
+#!/bin/sh
+
+#    This file is part of dmenu-scripts.
+#
+#    dmenu-scripts is free software: you can redistribute it and/or modify it under
+#    the terms of the GNU General Public License as published by the
+#    Free Software Foundation, either version 3 of the License, or (at your
+#    option) any later version.
+#
+#    dmenu-scripts is distributed in the hope that it will be useful, but
+#    WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#    General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program. If not, see https://www.gnu.org/licenses/.
+
+# Settings manager
+
+# Defaults
+lines="$DMENU_LINES"
+border="$DMENU_BORDER"
+height="$DMENU_HEIGHT"
+prompt="󰢻 Settings for $(whoami):"
+
+# For settings that need config file editing
+config_edit="$TERMINAL -e $EDITOR"
+
+# List of choices (function)
+list_choices(){
+	cat << EOF
+󰢻 General settings
+󰍁 Lock screen
+󰂏 Power management
+󰲝 Network
+󰜇 Printer
+󰌧 Autostart
+󰌧 WM autostart
+󰧺 Keybindings
+󰧺 WM keybindings
+󰓦 Backup utility
+󰣖 Dconf
+󰏖 Flatpak permissions
+EOF
+}
+
+# dmenu command
+dmenu_cmd(){
+	dmenu -c -n -l $lines -bw $border -h $height -p "$prompt"
+}
+
+# Command
+choice=$(list_choices | dmenu_cmd)
+
+case "$choice" in
+	"󰢻 General settings") $SET_GENERAL ;;
+  	"󰍁 Lock screen") $config_edit $HOME/.xprofile ;;
+	"󰂏 Power management") $POWER_MGR ;;
+  	"󰲝 Network") $NM_EDITOR ;;
+  	"󰜇 Printer") $PRINT ;;
+  	"󰌧 Autostart") $config_edit $AUTOSTART ;;
+  	"󰌧 WM autostart") $config_edit $WM_AUTOSTART ;;
+  	"󰧺 Keybindings") $config_edit $KEYBIND ;;
+  	"󰧺 WM keybindings") $WM_KEYBIND ;;
+  	"󰓦 Backup utility") $BACKUP_UTIL ;;
+	"󰣖 Dconf") $DCONF_EDITOR ;;
+	"󰏖 Flatpak permissions") $FLATSEAL ;;
+esac
+
+
+
+# vim: ft=sh
